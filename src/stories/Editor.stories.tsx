@@ -14,5 +14,5 @@ const Template: ComponentStory<typeof Editor> = (args: any) => <Editor {...args}
 export const HelloWorld = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 HelloWorld.args = {
-  test: "Hello world!",
+  placeholder: "Hello world!",
 };

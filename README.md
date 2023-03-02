@@ -2,6 +2,14 @@
 
 Markdown Component based on Draft.js
 
+## Installation
+
+- Because Draft.js supports unicode, you must have the following meta tag in the `<head></head>`block of your HTML file:
+
+```html
+<meta charset="utf-8" />
+```
+
 ## TODO:
 
 - Add instructions for publishing (rollup and npm)
