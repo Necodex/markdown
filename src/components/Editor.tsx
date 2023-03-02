@@ -1,6 +1,10 @@
 import React from "react";
 import "./editor.css";
 
-export default function Editor() {
-  return <>Editor</>;
+type Props = {
+  test?: string;
+}
+
+export default function Editor(props: Props) {
+  return <>Editor {props.test}</>;
 }
