@@ -25,6 +25,11 @@
   overflow: hidden;
 }
 
+.editor-inner {
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
 .editor-inner,
 .display-inner {
   background: #fff;
@@ -234,6 +239,8 @@ pre::-webkit-scrollbar-thumb {
 
 .toolbar {
   display: flex;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
   margin-bottom: 1px;
   background: #fff;
   padding: 4px;
