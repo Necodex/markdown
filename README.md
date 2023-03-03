@@ -1,6 +1,6 @@
 # @necodex/markdown
 
-Markdown Component based on Draft.js
+Markdown Component based on Facebook Lexical
 
 ## Installation
 
@@ -16,7 +16,12 @@ Markdown Component based on Draft.js
 - Add how to use
 - Add components documentation
 - Add how to develop using storybook
-- Add some info on peerDependencies like Draft.js and more
+- Add some info on peerDependencies like Lexical and more
+- Indent capability
+- Fix links
+- Instructions on how to convert from and to JSON
+- Add a way to extend the toolbar
+- Something about the --legacy-peer-deps
 
 ## About
 
