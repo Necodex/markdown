@@ -1,10 +1,10 @@
 {
   "name": "@necodex/markdown",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "publishConfig": {
     "access": "public"
   },
-  "description": "Markdown Component based on Draft.js",
+  "description": "Markdown Component based on Lexical",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "rollup": "rollup -c",
@@ -15,6 +15,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.21.0",
+    "@lexical/react": "^0.8.1",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-terser": "^0.4.0",
@@ -29,9 +30,12 @@
     "@storybook/testing-library": "^0.0.13",
     "@types/draft-js": "^0.11.10",
     "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
     "babel-loader": "^8.3.0",
     "css-loader": "^5.2.6",
     "draft-js": "^0.11.7",
+    "lexical": "^0.8.1",
+    "postcss": "^8.4.21",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "rollup": "^3.18.0",

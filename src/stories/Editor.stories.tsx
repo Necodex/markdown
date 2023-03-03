@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import Editor from "../components/Editor";
+import Editor from "../components/MarkdownEditor";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -9,10 +9,23 @@ export default {
 } as ComponentMeta<typeof Editor>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof Editor> = (args: any) => <Editor {...args} />;
+const Template: ComponentStory<typeof Editor> = (args: any) => (
+  <Editor {...args} />
+);
 
-export const HelloWorld = Template.bind({});
+export const Basic = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-HelloWorld.args = {
-  placeholder: "Hello world!",
+Basic.args = {};
+
+export const ToJSON = Template.bind({});
+ToJSON.args = {
+  onChange: (editorState: any, editor: any) => {
+    const state = editorState.toJSON();
+    console.log(JSON.stringify(state));
+  },
+};
+
+export const initialJSON = Template.bind({});
+initialJSON.args = {
+  initialJSON: `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"dsa","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"heading","version":1,"tag":"h1"},{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"dsa","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"listitem","version":1,"value":1},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"dsa","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"listitem","version":1,"value":2}],"direction":"ltr","format":"","indent":0,"type":"list","version":1,"listType":"bullet","start":1,"tag":"ul"},{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"dsadsa","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`,
 };

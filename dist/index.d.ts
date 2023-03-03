@@ -1,4 +1,16 @@
 /// <reference types="react" />
-declare function Editor(): JSX.Element;
+import { EditorState, LexicalEditor } from 'lexical';
 
-export { Editor };
+type Props$1 = {
+    onChange?: (editorState: EditorState, editor: LexicalEditor) => void;
+    debounceOnChange?: number;
+    initialJSON?: string;
+};
+declare function Editor(props: Props$1): JSX.Element;
+
+type Props = {
+    contentJSON?: string;
+};
+declare function MarkdownDisplay(props: Props): JSX.Element;
+
+export { MarkdownDisplay, Editor as MarkdownEditor };
