@@ -21,6 +21,7 @@ import { AutoLinkNode, LinkNode } from "@lexical/link";
 import ToolbarPlugin from "../plugins/ToolbarPlugin";
 import CodeHighlightPlugin from "../plugins/CodeHighlightPlugin";
 import AutoLinkPlugin from "../plugins/AutoLinkPlugin";
+import ParseJSONPlugin from "../plugins/ParseJSONPlugin";
 // Styles
 import editorTheme from "../themes/BaseTheme";
 import "../themes/base_theme.scss";
@@ -32,7 +33,7 @@ import type { InitialConfigType } from "@lexical/react/LexicalComposer";
 type Props = {
   onChange?: (editorState: EditorState, editor: LexicalEditor) => void;
   debounceOnChange?: number;
-  initialState?: EditorState;
+  initialJSON?: string;
 };
 
 function Placeholder() {
@@ -58,9 +59,8 @@ export default function Editor(props: Props) {
         AutoLinkNode,
         LinkNode,
       ],
-      ...(props.initialState && { editorState: props.initialState }),
     };
-  }, [props.initialState]);
+  }, []);
 
   var timeout: NodeJS.Timeout;
   const handleOnChange = useCallback(
@@ -87,6 +87,7 @@ export default function Editor(props: Props) {
               ErrorBoundary={LexicalErrorBoundary}
             />
             <OnChangePlugin onChange={handleOnChange} />
+            <ParseJSONPlugin contentJSON={props.initialJSON} />
             <HistoryPlugin />
             <AutoFocusPlugin />
             <CodeHighlightPlugin />
