@@ -17,16 +17,15 @@ import { MarkdownEditor } from "@necodex/markdown";
 
 export default function MyComponent() {
   // This could come from an async call to the database, an API, etc.
-  const contentInJSON: string = someFunction();
+  const markdownString: string = someFunction();
+  // const JSONString: string = someFunction();
 
-  const handleChange = (
-    editorState: EditorState,
-    editor: LexicalEditor
-  ): void => {
+  const handleChange = (content: string): void => {
     // This function will fire after the latest change.
     // After the milliseconds specified on debounceOnChange.
     // Maybe store it to your database or something else.
-    const content = JSON.stringify(editorState.toJSON());
+
+    console.log(content); // Either Markdown or JSON.
   };
 
   return (
@@ -34,7 +33,10 @@ export default function MyComponent() {
       <MarkdownEditor
         onChange={handleChange} // Optional. Default is () => {}
         debounceOnChange={250} // Optional. Milliseconds. Default is 500.
-        initialJSON={contentInJSON} // Optional. Useful when editing something.
+        outputFormat="markkdown" // Optional. Either markdown or json. Default is markdown.
+        // One or the other. initialMarkdown or initialJSON
+        initialMarkdown={markdownString} // Optional. Useful when editing something.
+        initialJSON={JSONString} // Optional. Useful when editing something.
       />
     </div>
   );
@@ -48,12 +50,15 @@ import { MarkdownDisplay } from "@necodex/markdown";
 
 export default function MyComponent() {
   // This could come from an async call to the database, an API, etc.
-  const contentInJSON: string = someFunction();
+  const markdownString: string = someFunction();
+  // const JSONString: string = someFunction();
 
   return (
     <div>
       <MarkdownDisplay 
-        contentJSON={contentInJSON} // Optional. If left empty only an empty block renders.
+        // One or the other.
+        contentMarkdown={markdownString} // Optional. If left empty only an empty block renders.
+        contentJSON={JSONString} // Optional. If left empty only an empty block renders.
       />
     </div>
   );
@@ -74,12 +79,11 @@ npm run storybook
 
 ### TODO
 
-- Add actual markdown support to export and import markdown
 - Fix links (they're not clickable currently)
 - Indent capability for lists and others
 - Add a way to extend the toolbar plugin
-- Need to also export some types from Lexical
 - Setup ESLint for development
+- Limit to only one type of content as input
 
 ### About
 

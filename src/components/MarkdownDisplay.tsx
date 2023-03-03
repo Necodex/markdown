@@ -12,6 +12,7 @@ import { AutoLinkNode, LinkNode } from "@lexical/link";
 // Plugins
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 // Custom plugins
+import ParseMarkdownPlugin from "../plugins/ParseMarkdownPlugin";
 import ParseJSONPlugin from "../plugins/ParseJSONPlugin";
 // Styles
 import editorTheme from "../themes/BaseTheme";
@@ -21,6 +22,7 @@ import type { InitialConfigType } from "@lexical/react/LexicalComposer";
 
 type Props = {
   contentJSON?: string;
+  contentMarkdown?: string;
 };
 
 export default function MarkdownDisplay(props: Props) {
@@ -58,6 +60,7 @@ export default function MarkdownDisplay(props: Props) {
               placeholder={<></>}
               ErrorBoundary={LexicalErrorBoundary}
             />
+            <ParseMarkdownPlugin contentMarkdown={props.contentMarkdown} />
             <ParseJSONPlugin contentJSON={props.contentJSON} />
           </div>
         </div>

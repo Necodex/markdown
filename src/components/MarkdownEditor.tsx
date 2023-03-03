@@ -3,7 +3,8 @@ import React, { useCallback, useMemo } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import { TRANSFORMERS } from "@lexical/markdown";
+import { $convertToMarkdownString, TRANSFORMERS } from "@lexical/markdown";
+
 // Plugins
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
@@ -21,6 +22,7 @@ import { AutoLinkNode, LinkNode } from "@lexical/link";
 import ToolbarPlugin from "../plugins/ToolbarPlugin";
 import CodeHighlightPlugin from "../plugins/CodeHighlightPlugin";
 import AutoLinkPlugin from "../plugins/AutoLinkPlugin";
+import ParseMarkdownPlugin from "../plugins/ParseMarkdownPlugin";
 import ParseJSONPlugin from "../plugins/ParseJSONPlugin";
 // Styles
 import editorTheme from "../themes/BaseTheme";
@@ -31,8 +33,10 @@ import type { EditorState, LexicalEditor } from "lexical";
 import type { InitialConfigType } from "@lexical/react/LexicalComposer";
 
 type Props = {
-  onChange?: (editorState: EditorState, editor: LexicalEditor) => void;
+  onChange?: (content: string) => void;
   debounceOnChange?: number;
+  outputFormat?: "markdown" | "json";
+  initialMarkdown?: string;
   initialJSON?: string;
 };
 
@@ -68,11 +72,21 @@ export default function Editor(props: Props) {
       if (props.onChange) {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-          props.onChange?.(editorState, editor);
+          const outputFormat = props.outputFormat || "markdown";
+          if (outputFormat === "markdown") {
+            editor.update(() => {
+              const markdown = $convertToMarkdownString(TRANSFORMERS);
+              props.onChange?.(markdown);
+            });
+          }
+          if (outputFormat === "json") {
+            const json = JSON.stringify(editorState.toJSON());
+            props.onChange?.(json);
+          }
         }, props.debounceOnChange || 500);
       }
     },
-    [props.debounceOnChange, props.onChange]
+    [props.debounceOnChange, props.onChange, props.outputFormat]
   );
 
   return (
@@ -87,6 +101,7 @@ export default function Editor(props: Props) {
               ErrorBoundary={LexicalErrorBoundary}
             />
             <OnChangePlugin onChange={handleOnChange} />
+            <ParseMarkdownPlugin contentMarkdown={props.initialMarkdown} />
             <ParseJSONPlugin contentJSON={props.initialJSON} />
             <HistoryPlugin />
             <AutoFocusPlugin />
