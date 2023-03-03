@@ -74,9 +74,12 @@ npm run storybook
 
 ### TODO
 
+- Add actual markdown support to export and import markdown
 - Fix links (they're not clickable currently)
 - Indent capability for lists and others
 - Add a way to extend the toolbar plugin
+- Need to also export some types from Lexical
+- Setup ESLint for development
 
 ### About
 

@@ -17,7 +17,6 @@
   border-radius: 0.25rem;
   color: #333;
   position: relative;
-  overflow: hidden;
 }
 
 .display-container {
@@ -88,7 +87,7 @@
   background-color: rgb(240, 242, 245);
   padding: 1px 0.25rem;
   font-family: Menlo, Consolas, Monaco, monospace;
-  font-size: 94%;
+  font-size: 13px
 }
 
 .editor-link {
@@ -195,7 +194,8 @@
 }
 
 .editor-quote {
-  margin: 1rem 0;
+  margin: 0;
+  margin-bottom: 1rem;
   margin-left: 1rem;
   font-size: 0.95em;
   color: #555;
@@ -208,13 +208,11 @@
 .editor-list-ol {
   padding: 0;
   margin: 0;
-  margin-left: 16px;
 }
 
 .editor-list-ul {
   padding: 0;
   margin: 0;
-  margin-left: 16px;
 }
 
 .editor-listitem {
@@ -295,7 +293,7 @@ pre::-webkit-scrollbar-thumb {
   border: 0;
   display: flex;
   background: none;
-  border-radius: 10px;
+  border-radius: 0.25rem;
   padding: 8px;
   vertical-align: middle;
   -webkit-appearance: none;
@@ -308,20 +306,19 @@ pre::-webkit-scrollbar-thumb {
 
 .toolbar select.code-language {
   text-transform: capitalize;
-  width: 130px;
+  width: auto;
 }
 
 .toolbar .toolbar-item .text {
   display: flex;
   line-height: 20px;
-  width: 200px;
   vertical-align: middle;
   font-size: 14px;
   color: #777;
   text-overflow: ellipsis;
-  width: 70px;
   overflow: hidden;
   height: 20px;
+  width: auto;
   text-align: left;
 }
 
@@ -333,35 +330,6 @@ pre::-webkit-scrollbar-thumb {
   margin-right: 8px;
   line-height: 16px;
   background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.toolbar i.chevron-down {
-  margin-top: 3px;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  user-select: none;
-}
-
-.toolbar i.chevron-down.inside {
-  width: 16px;
-  height: 16px;
-  display: flex;
-  margin-left: -25px;
-  margin-top: 11px;
-  margin-right: 10px;
-  pointer-events: none;
-}
-
-i.chevron-down {
-  background-color: transparent;
-  background-size: contain;
-  display: inline-block;
-  height: 8px;
-  width: 8px;
-  background-image: url(../icons/chevron-down-solid.svg);
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -411,17 +379,20 @@ i.chevron-down {
 }
 
 .dropdown {
+  position: relative;
+}
+
+.dropdown ul {
   z-index: 5;
-  display: block;
   position: absolute;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1),
     inset 0 0 0 1px rgba(255, 255, 255, 0.5);
   border-radius: 0.25rem;
-  min-width: 100px;
-  min-height: 40px;
-  background-color: #fff;
-  top: 62px !important;
-  left: 92px !important;
+  top: 42px;
 }
 
 .dropdown .item {
@@ -466,6 +437,8 @@ i.chevron-down {
   line-height: 20px;
   flex-grow: 1;
   width: auto;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .dropdown .item .icon {

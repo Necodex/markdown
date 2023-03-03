@@ -28,7 +28,6 @@ import {
   $isListNode,
   ListNode,
 } from "@lexical/list";
-import { createPortal } from "react-dom";
 import {
   $createHeadingNode,
   $createQuoteNode,
@@ -40,8 +39,6 @@ import {
   getDefaultCodeLanguage,
   getCodeLanguages,
 } from "@lexical/code";
-
-const LowPriority = 1;
 
 const supportedBlockTypes = new Set([
   "paragraph",
@@ -66,33 +63,6 @@ const blockTypeToBlockName: any = {
   ul: "Bulleted List",
 };
 
-function Divider() {
-  return <div className="divider" />;
-}
-
-function Select({
-  onChange,
-  className,
-  options,
-  value,
-}: {
-  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => any;
-  className: string;
-  options: string[];
-  value: string;
-}) {
-  return (
-    <select className={className} onChange={onChange} value={value}>
-      <option hidden={true} value="" />
-      {options.map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  );
-}
-
 function getSelectedNode(selection: any) {
   const anchor = selection.anchor;
   const focus = selection.focus;
@@ -109,184 +79,23 @@ function getSelectedNode(selection: any) {
   }
 }
 
-function BlockOptionsDropdownList({
-  editor,
-  blockType,
-  toolbarRef,
-  setShowBlockOptionsDropDown,
-}: {
-  editor: any;
-  blockType: any;
-  toolbarRef: any;
-  setShowBlockOptionsDropDown: any;
-}) {
-  const dropDownRef = useRef(null);
-
-  useEffect(() => {
-    const toolbar = toolbarRef.current;
-    const dropDown: any = dropDownRef.current;
-
-    if (toolbar !== null && dropDown !== null) {
-      const { top, left } = toolbar.getBoundingClientRect();
-      dropDown.style.top = `${top + 40}px`;
-      dropDown.style.left = `${left}px`;
-    }
-  }, [dropDownRef, toolbarRef]);
-
-  useEffect(() => {
-    const dropDown: any = dropDownRef.current;
-    const toolbar = toolbarRef.current;
-
-    if (dropDown !== null && toolbar !== null) {
-      const handle = (event: any) => {
-        const target = event.target;
-
-        if (!dropDown.contains(target) && !toolbar.contains(target)) {
-          setShowBlockOptionsDropDown(false);
-        }
-      };
-      document.addEventListener("click", handle);
-
-      return () => {
-        document.removeEventListener("click", handle);
-      };
-    }
-  }, [dropDownRef, setShowBlockOptionsDropDown, toolbarRef]);
-
-  const formatParagraph = () => {
-    if (blockType !== "paragraph") {
-      editor.update(() => {
-        const selection = $getSelection();
-
-        if ($isRangeSelection(selection)) {
-          $wrapNodes(selection, () => $createParagraphNode());
-        }
-      });
-    }
-    setShowBlockOptionsDropDown(false);
-  };
-
-  const formatLargeHeading = () => {
-    if (blockType !== "h1") {
-      editor.update(() => {
-        const selection = $getSelection();
-
-        if ($isRangeSelection(selection)) {
-          $wrapNodes(selection, () => $createHeadingNode("h1"));
-        }
-      });
-    }
-    setShowBlockOptionsDropDown(false);
-  };
-
-  const formatSmallHeading = () => {
-    if (blockType !== "h2") {
-      editor.update(() => {
-        const selection = $getSelection();
-
-        if ($isRangeSelection(selection)) {
-          $wrapNodes(selection, () => $createHeadingNode("h2"));
-        }
-      });
-    }
-    setShowBlockOptionsDropDown(false);
-  };
-
-  const formatBulletList = () => {
-    if (blockType !== "ul") {
-      editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND);
-    } else {
-      editor.dispatchCommand(REMOVE_LIST_COMMAND);
-    }
-    setShowBlockOptionsDropDown(false);
-  };
-
-  const formatNumberedList = () => {
-    if (blockType !== "ol") {
-      editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND);
-    } else {
-      editor.dispatchCommand(REMOVE_LIST_COMMAND);
-    }
-    setShowBlockOptionsDropDown(false);
-  };
-
-  const formatQuote = () => {
-    if (blockType !== "quote") {
-      editor.update(() => {
-        const selection = $getSelection();
-
-        if ($isRangeSelection(selection)) {
-          $wrapNodes(selection, () => $createQuoteNode());
-        }
-      });
-    }
-    setShowBlockOptionsDropDown(false);
-  };
-
-  const formatCode = () => {
-    if (blockType !== "code") {
-      editor.update(() => {
-        const selection = $getSelection();
-
-        if ($isRangeSelection(selection)) {
-          $wrapNodes(selection, () => $createCodeNode());
-        }
-      });
-    }
-    setShowBlockOptionsDropDown(false);
-  };
-
-  return (
-    <div className="dropdown" ref={dropDownRef}>
-      <button className="item" onClick={formatParagraph}>
-        <span className="icon paragraph" />
-        <span className="text">Normal</span>
-        {blockType === "paragraph" && <span className="active" />}
-      </button>
-      <button className="item" onClick={formatLargeHeading}>
-        <span className="icon large-heading" />
-        <span className="text">Large Heading</span>
-        {blockType === "h1" && <span className="active" />}
-      </button>
-      <button className="item" onClick={formatSmallHeading}>
-        <span className="icon small-heading" />
-        <span className="text">Small Heading</span>
-        {blockType === "h2" && <span className="active" />}
-      </button>
-      <button className="item" onClick={formatBulletList}>
-        <span className="icon bullet-list" />
-        <span className="text">Bullet List</span>
-        {blockType === "ul" && <span className="active" />}
-      </button>
-      <button className="item" onClick={formatNumberedList}>
-        <span className="icon numbered-list" />
-        <span className="text">Numbered List</span>
-        {blockType === "ol" && <span className="active" />}
-      </button>
-      <button className="item" onClick={formatQuote}>
-        <span className="icon quote" />
-        <span className="text">Quote</span>
-        {blockType === "quote" && <span className="active" />}
-      </button>
-      <button className="item" onClick={formatCode}>
-        <span className="icon code" />
-        <span className="text">Code Block</span>
-        {blockType === "code" && <span className="active" />}
-      </button>
-    </div>
-  );
+function Divider() {
+  return <div className="divider" />;
 }
 
-export default function ToolbarPlugin() {
+export default function TestToolbarPlugin() {
   const [editor] = useLexicalComposerContext() as any;
-  const toolbarRef = useRef(null);
-  const [canUndo, setCanUndo] = useState(false);
-  const [canRedo, setCanRedo] = useState(false);
+
   const [blockType, setBlockType] = useState("paragraph");
   const [selectedElementKey, setSelectedElementKey] = useState(null);
-  const [showBlockOptionsDropDown, setShowBlockOptionsDropDown] =
-    useState(false);
+  const [blockOptionsDropdown, setBlockOptionsDropdown] = useState(false);
+  const toggleBlockOptionsDropdown = () =>
+    setBlockOptionsDropdown((prev) => !prev);
+
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
   const [codeLanguage, setCodeLanguage] = useState("");
+
   const [isRTL, setIsRTL] = useState(false);
   const [isLink, setIsLink] = useState(false);
   const [isBold, setIsBold] = useState(false);
@@ -353,7 +162,7 @@ export default function ToolbarPlugin() {
           updateToolbar();
           return false;
         },
-        LowPriority
+        1
       ),
       editor.registerCommand(
         CAN_UNDO_COMMAND,
@@ -361,7 +170,7 @@ export default function ToolbarPlugin() {
           setCanUndo(payload);
           return false;
         },
-        LowPriority
+        1
       ),
       editor.registerCommand(
         CAN_REDO_COMMAND,
@@ -369,12 +178,12 @@ export default function ToolbarPlugin() {
           setCanRedo(payload);
           return false;
         },
-        LowPriority
+        1
       )
     );
-  }, [editor, updateToolbar]);
+  }, [editor]);
 
-  const codeLanguges = useMemo(() => getCodeLanguages(), []);
+  const codeLanguages = useMemo(() => getCodeLanguages(), []);
   const onCodeLanguageSelect = useCallback(
     (e: any) => {
       editor.update(() => {
@@ -397,24 +206,117 @@ export default function ToolbarPlugin() {
     }
   }, [editor, isLink]);
 
+  const refDropdown: any = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (refDropdown.current && !refDropdown.current.contains(event.target)) {
+        setBlockOptionsDropdown(false);
+      }
+    }
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const formatParagraph = () => {
+    if (blockType !== "paragraph") {
+      editor.update(() => {
+        const selection = $getSelection();
+
+        if ($isRangeSelection(selection)) {
+          $wrapNodes(selection, () => $createParagraphNode());
+        }
+      });
+    }
+    setBlockOptionsDropdown(false);
+  };
+
+  const formatLargeHeading = () => {
+    if (blockType !== "h1") {
+      editor.update(() => {
+        const selection = $getSelection();
+
+        if ($isRangeSelection(selection)) {
+          $wrapNodes(selection, () => $createHeadingNode("h1"));
+        }
+      });
+    }
+    setBlockOptionsDropdown(false);
+  };
+
+  const formatSmallHeading = () => {
+    if (blockType !== "h2") {
+      editor.update(() => {
+        const selection = $getSelection();
+
+        if ($isRangeSelection(selection)) {
+          $wrapNodes(selection, () => $createHeadingNode("h2"));
+        }
+      });
+    }
+    setBlockOptionsDropdown(false);
+  };
+
+  const formatBulletList = () => {
+    if (blockType !== "ul") {
+      editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND);
+    } else {
+      editor.dispatchCommand(REMOVE_LIST_COMMAND);
+    }
+    setBlockOptionsDropdown(false);
+  };
+
+  const formatNumberedList = () => {
+    if (blockType !== "ol") {
+      editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND);
+    } else {
+      editor.dispatchCommand(REMOVE_LIST_COMMAND);
+    }
+    setBlockOptionsDropdown(false);
+  };
+
+  const formatQuote = () => {
+    if (blockType !== "quote") {
+      editor.update(() => {
+        const selection = $getSelection();
+
+        if ($isRangeSelection(selection)) {
+          $wrapNodes(selection, () => $createQuoteNode());
+        }
+      });
+    }
+    setBlockOptionsDropdown(false);
+  };
+
+  const formatCode = () => {
+    if (blockType !== "code") {
+      editor.update(() => {
+        const selection = $getSelection();
+
+        if ($isRangeSelection(selection)) {
+          $wrapNodes(selection, () => $createCodeNode());
+        }
+      });
+    }
+    setBlockOptionsDropdown(false);
+  };
+
   return (
-    <div className="toolbar" ref={toolbarRef}>
+    <div className="toolbar">
       <button
-        disabled={!canUndo}
-        onClick={() => {
-          editor.dispatchCommand(UNDO_COMMAND);
-        }}
         className="toolbar-item spaced"
+        disabled={!canUndo}
+        onClick={() => editor.dispatchCommand(UNDO_COMMAND)}
         aria-label="Undo"
       >
         <i className="format undo" />
       </button>
       <button
+        className="toolbar-item spaced"
         disabled={!canRedo}
-        onClick={() => {
-          editor.dispatchCommand(REDO_COMMAND);
-        }}
-        className="toolbar-item"
+        onClick={() => editor.dispatchCommand(REDO_COMMAND)}
         aria-label="Redo"
       >
         <i className="format redo" />
@@ -422,41 +324,90 @@ export default function ToolbarPlugin() {
       <Divider />
       {supportedBlockTypes.has(blockType) && (
         <>
-          <button
-            className="toolbar-item block-controls"
-            onClick={() =>
-              setShowBlockOptionsDropDown(!showBlockOptionsDropDown)
-            }
-            aria-label="Formatting Options"
-          >
-            <span className={"icon block-type " + blockType} />
-            <span className="text">{blockTypeToBlockName[blockType]}</span>
-            <i className="chevron-down" />
-          </button>
-          {showBlockOptionsDropDown &&
-            createPortal(
-              <BlockOptionsDropdownList
-                editor={editor}
-                blockType={blockType}
-                toolbarRef={toolbarRef}
-                setShowBlockOptionsDropDown={setShowBlockOptionsDropDown}
-              />,
-              document.body
+          <div className="dropdown" ref={refDropdown}>
+            <button
+              type="button"
+              className="toolbar-item block-controls"
+              onClick={toggleBlockOptionsDropdown}
+              aria-label="Formatting options"
+            >
+              <span className={"icon block-type " + blockType} />
+              <span className="text">{blockTypeToBlockName[blockType]}</span>
+            </button>
+            {blockOptionsDropdown && (
+              <ul className="">
+                <li>
+                  <button className="item" onClick={formatParagraph}>
+                    <span className="icon paragraph" />
+                    <span className="text">Normal</span>
+                    {blockType === "paragraph" && <span className="active" />}
+                  </button>
+                </li>
+                <li>
+                  <button className="item" onClick={formatLargeHeading}>
+                    <span className="icon large-heading" />
+                    <span className="text">Large Heading</span>
+                    {blockType === "h1" && <span className="active" />}
+                  </button>
+                </li>
+                <li>
+                  <button className="item" onClick={formatSmallHeading}>
+                    <span className="icon small-heading" />
+                    <span className="text">Small Heading</span>
+                    {blockType === "h2" && <span className="active" />}
+                  </button>
+                </li>
+                <li>
+                  <button className="item" onClick={formatBulletList}>
+                    <span className="icon bullet-list" />
+                    <span className="text">Bullet List</span>
+                    {blockType === "ul" && <span className="active" />}
+                  </button>
+                </li>
+                <li>
+                  <button className="item" onClick={formatNumberedList}>
+                    <span className="icon numbered-list" />
+                    <span className="text">Numbered List</span>
+                    {blockType === "ol" && <span className="active" />}
+                  </button>
+                </li>
+                <li>
+                  <button className="item" onClick={formatQuote}>
+                    <span className="icon quote" />
+                    <span className="text">Quote</span>
+                    {blockType === "quote" && <span className="active" />}
+                  </button>
+                </li>
+                <li>
+                  <button className="item" onClick={formatCode}>
+                    <span className="icon code" />
+                    <span className="text">Code Block</span>
+                    {blockType === "code" && <span className="active" />}
+                  </button>
+                </li>
+              </ul>
             )}
+          </div>
           <Divider />
         </>
       )}
-      {blockType === "code" ? (
+      {blockType === "code" && (
         <>
-          <Select
+          <select
             className="toolbar-item code-language"
             onChange={onCodeLanguageSelect}
-            options={codeLanguges}
             value={codeLanguage}
-          />
-          <i className="chevron-down inside" />
+          >
+            <option hidden value="" />
+            {codeLanguages.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
         </>
-      ) : (
+      )}
+      {blockType !== "code" && (
         <>
           <button
             onClick={() => {
@@ -549,7 +500,7 @@ export default function ToolbarPlugin() {
             aria-label="Justify Align"
           >
             <i className="format justify-align" />
-          </button>{" "}
+          </button>
         </>
       )}
     </div>

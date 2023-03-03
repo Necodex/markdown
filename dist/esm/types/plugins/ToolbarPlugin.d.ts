@@ -1,2 +1,2 @@
 /// <reference types="react" />
-export default function ToolbarPlugin(): JSX.Element;
+export default function TestToolbarPlugin(): JSX.Element;
