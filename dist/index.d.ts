@@ -4,7 +4,7 @@ import { EditorState, LexicalEditor } from 'lexical';
 type Props$1 = {
     onChange?: (editorState: EditorState, editor: LexicalEditor) => void;
     debounceOnChange?: number;
-    initialState?: EditorState;
+    initialJSON?: string;
 };
 declare function Editor(props: Props$1): JSX.Element;
 
