@@ -7,7 +7,7 @@
   "description": "Markdown Component based on Lexical",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "rollup": "rollup -c",
+    "rollup": "rollup -c --verbose",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
